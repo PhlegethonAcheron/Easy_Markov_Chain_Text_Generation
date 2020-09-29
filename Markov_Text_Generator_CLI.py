@@ -61,16 +61,15 @@ def cleanup(text):
     return text
 
 
-def get_dict(text_file):
+def get_dict(text_file, dict_path):
     json_file_name = 'dict_' + os.path.splitext(text_file)[0] + '.json'
     if path.exists(json_file_name):
         with open('dict_' + os.path.splitext(text_file)[0] + '.json') as json_file:
             word_dict = json.load(json_file)
     else:
         word_dict = train_model(open(text_file).read())
-        with open('dict_' + os.path.splitext(text_file)[0] + '.json', 'w') as outfile:
+        with open(json_file_path, 'w') as outfile:
             json.dump(word_dict, outfile)
-        # print("json file created successfully")
     return word_dict
 
 
@@ -107,11 +106,13 @@ def get_start_word(text):
 
 
 def main():
+    dict_path = os.getenv('APPDATA') + '\\Markov_Dictionaries\\'
     text_file = get_text_file()
     text = open(text_file).read()
-    word_dict = get_dict(text_file)
+    word_dict = get_dict(text_file, dict_path)
     num_sentences = int(get_num_sentences())
     first_word = get_start_word(text)
+
     user_option = input(
         "Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly output to the cursor.\n:>\t")
 
