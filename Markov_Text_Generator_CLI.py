@@ -61,9 +61,6 @@ def remove_duplicates(lst):
 
 def cleanup(text):
     text = " ".join(remove_duplicates(text))
-    # text = text.strip('[]')
-    # text = text.replace("',", "")
-    # text = text.replace("'", "")
     text = text[0:2].capitalize() + text[2:]
     return text
 
@@ -74,7 +71,7 @@ def get_dict(text_file, dict_path):
     if not os.path.exists(dict_path):
         os.makedirs(dict_path)
     if path.exists(json_file_path):
-        with open(json_file_path) as json_file:
+        with open(json_file_path) as json_file_path:
             word_dict = json.load(json_file_path)
     else:
         word_dict = train_model(open(text_file).read())
