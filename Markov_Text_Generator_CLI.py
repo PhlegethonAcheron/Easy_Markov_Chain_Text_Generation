@@ -8,6 +8,13 @@ import numpy as np
 import pyautogui
 
 
+# TODO: Make this a class with constructor.
+# TODO: Add the Dictionary location as an optional argument
+# TODO: Make the first_word an optional argument
+# TODO: Remove main() from this class
+# TODO: Remove all the methods made for the CLI, put them in their own class.
+# TODO: Make a GUI
+
 def make_pairs(text):
     text = text.split()
     for i in range(len(text) - 1):
@@ -63,9 +70,12 @@ def cleanup(text):
 
 def get_dict(text_file, dict_path):
     json_file_name = 'dict_' + os.path.splitext(text_file)[0] + '.json'
-    if path.exists(json_file_name):
-        with open('dict_' + os.path.splitext(text_file)[0] + '.json') as json_file:
-            word_dict = json.load(json_file)
+    json_file_path = dict_path + json_file_name
+    if not os.path.exists(dict_path):
+        os.makedirs(dict_path)
+    if path.exists(json_file_path):
+        with open(json_file_path) as json_file:
+            word_dict = json.load(json_file_path)
     else:
         word_dict = train_model(open(text_file).read())
         with open(json_file_path, 'w') as outfile:
