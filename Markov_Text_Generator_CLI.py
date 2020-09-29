@@ -124,9 +124,10 @@ def main():
         "Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly output to the cursor.\n:>\t")
 
     if 1 == int(user_option):
-        output_file = open('output_' + text_file, "a")
+        output_file = open('output_' + text_file, 'a')
         for i in range(num_sentences):
             output_file.write(cleanup(generate_text(first_word, word_dict)) + '\n')
+        output_file.close()
         input("Done!")
 
     elif 2 == int(user_option):
