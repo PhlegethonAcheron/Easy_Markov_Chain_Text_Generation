@@ -37,7 +37,7 @@ def generate_text(first_word, text, word_dict):
     while True:
         curr_word = np.random.choice(word_dict[chain[-1]])
         chain.append(curr_word)
-        if any(x in curr_word for x in ('!', '?', '.')) and not any(x in curr_word for x in ('Mr.', 'Ms.', 'Mrs.')):
+        if any(x in curr_word for x in ('!', '?', '.')) and not any(x in curr_word for x in ('Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Sr.')):
             return chain
 
 def remove_duplicates(lst):

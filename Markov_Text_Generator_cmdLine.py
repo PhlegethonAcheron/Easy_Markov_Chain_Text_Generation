@@ -7,7 +7,6 @@ from os import path
 import numpy as np
 import pyautogui
 
-
 def make_pairs(text):
     text = text.split()
     for i in range(len(text)-1):
@@ -92,7 +91,7 @@ def main_bit_automatic():
     text = open(text_file).read()
     word_dict = get_dict(text_file)
     num_sentences = int(get_num_sentences())
-    user_option = input("Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly type the output to wherever your cursor is\n:>\t")
+    user_option = input("Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly output to the cursor.\n:>\t")
 
     if 1 == int(user_option):
         output_file = open('output_' + text_file, "a")
@@ -100,12 +99,12 @@ def main_bit_automatic():
             output_file.write(cleanup(generate_text(text, word_dict)) + '\n')
         input("Done!")
 
-    if 2 == int(user_option):
+    elif 2 == int(user_option):
         for i in range(num_sentences):
             print(cleanup(generate_text(text, word_dict)))
         input("Done!")
 
-    if 3 == int(user_option):
+    elif 3 == int(user_option):
         print("You have 2 seconds to move the cursor to the desired location.")
         time.sleep(2)
         for i in range(num_sentences):
@@ -114,4 +113,11 @@ def main_bit_automatic():
             pyautogui.press('enter')
             time.sleep(0.5)
         input("Done!")
+
+    else:
+        print("Invalid option.")
+
+    if input("Would you like to run the program again? (Y/N)\n:>\t").upper() == 'Y':
+        main_bit_automatic()
+
 main_bit_automatic()
