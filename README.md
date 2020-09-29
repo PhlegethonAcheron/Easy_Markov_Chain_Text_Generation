@@ -3,9 +3,7 @@
 
 
 ## Getting Started
-
-Download the executable and place it in an empty folder. Double-click the program to start it. 
-
+Download the release and place it in an empty folder. If you chose the .zip, extract it into the empty folder. Double-click the `Markov_Text_Generator_CLI.exe` or `Markov_Text_Generator_CLI.PythonPackaged.v0.3.exe` to start.
 
 ## Using the CLI
 
