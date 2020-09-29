@@ -7,10 +7,12 @@ from os import path
 import numpy as np
 import pyautogui
 
+
 def make_pairs(text):
     text = text.split()
-    for i in range(len(text)-1):
+    for i in range(len(text) - 1):
         yield text[i], text[i + 1]
+
 
 def make_dict(pairs):
     word_dict = {}
@@ -21,13 +23,15 @@ def make_dict(pairs):
             word_dict[word_1] = [word_2]
     return word_dict
 
+
 def train_model(text):
     pairs = make_pairs(text)
     word_dict = make_dict(pairs)
     return word_dict
 
-def generate_text(text, word_dict):
-    chain = [np.random.choice(text.split())]
+
+def generate_text(first_word, word_dict):
+    chain = [first_word]
 
     while True:
         curr_word = np.random.choice(word_dict[chain[-1]])
@@ -35,16 +39,18 @@ def generate_text(text, word_dict):
         if any(x in curr_word for x in ('!', '?', '.')) and not any(x in curr_word for x in ('Mr.', 'Ms.', 'Mrs.')):
             return chain
 
+
 def remove_duplicates(lst):
     dropped_indices = set()
-    counter = Counter(tuple(lst[i:i+2]) for i in range(len(lst) - 1))
+    counter = Counter(tuple(lst[i:i + 2]) for i in range(len(lst) - 1))
 
     for i in range(len(lst) - 2, -1, -1):
-        sub = tuple(lst[i:i+2])
+        sub = tuple(lst[i:i + 2])
         if counter[sub] > 1:
             dropped_indices |= {i, i + 1}
             counter[sub] -= 1
     return [x for i, x in enumerate(lst) if i not in dropped_indices]
+
 
 def cleanup(text):
     text = " ".join(remove_duplicates(text))
@@ -53,6 +59,7 @@ def cleanup(text):
     # text = text.replace("'", "")
     text = text[0:2].capitalize() + text[2:]
     return text
+
 
 def get_dict(text_file):
     json_file_name = 'dict_' + os.path.splitext(text_file)[0] + '.json'
@@ -66,6 +73,7 @@ def get_dict(text_file):
         # print("json file created successfully")
     return word_dict
 
+
 def get_text_file():
     file_path = input("Source Data File?\n:>\t")
     if path.exists(file_path):
@@ -73,6 +81,7 @@ def get_text_file():
     else:
         print("That is not a valid file. Try again.")
         get_text_file()
+
 
 def get_num_sentences():
     num = input("How many sentences should be generated?\n:>\t")
@@ -82,42 +91,55 @@ def get_num_sentences():
         print("That is not an integer. Try again.")
         get_num_sentences()
 
-def get_start_word():
-    start_string = ' ' + input("What is the starting word?\n:>\t") + ' '
-    return start_string
+
+def get_start_word(text):
+    first_word = ' ' + input("What is the initial word?\n:>\t") + ' '
+
+    if first_word.upper() in text.upper():
+        print('Using chosen word.')
+        first_word = first_word.strip()
+    else:
+        if input("Chosen word not found. Chose a random word (Y) or select a new word (N) (Y/N)\n:>\t").upper() == 'N':
+            get_start_word(text)
+        else:
+            first_word = np.random.choice(text.split())
+    return first_word
+
 
 def main_bit_automatic():
     text_file = get_text_file()
     text = open(text_file).read()
     word_dict = get_dict(text_file)
     num_sentences = int(get_num_sentences())
-    user_option = input("Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly output to the cursor.\n:>\t")
+    first_word = get_start_word(text)
+    user_option = input(
+        "Would you like to: \n1) Save the output to a file\n2) Print output to console\n3) Have the program rapidly output to the cursor.\n:>\t")
 
     if 1 == int(user_option):
         output_file = open('output_' + text_file, "a")
         for i in range(num_sentences):
-            output_file.write(cleanup(generate_text(text, word_dict)) + '\n')
+            output_file.write(cleanup(generate_text(first_word, word_dict)) + '\n')
         input("Done!")
 
     elif 2 == int(user_option):
         for i in range(num_sentences):
-            print(cleanup(generate_text(text, word_dict)))
+            print(cleanup(generate_text(first_word, word_dict)))
         input("Done!")
 
     elif 3 == int(user_option):
         print("You have 2 seconds to move the cursor to the desired location.")
         time.sleep(2)
         for i in range(num_sentences):
-            output = cleanup(generate_text(text, word_dict))
-            pyautogui.typewrite(output, interval = 0.01)
+            output = cleanup(generate_text(first_word, word_dict))
+            pyautogui.typewrite(output, interval=0.01)
             pyautogui.press('enter')
             time.sleep(0.5)
         input("Done!")
-
     else:
         print("Invalid option.")
 
     if input("Would you like to run the program again? (Y/N)\n:>\t").upper() == 'Y':
         main_bit_automatic()
+
 
 main_bit_automatic()
