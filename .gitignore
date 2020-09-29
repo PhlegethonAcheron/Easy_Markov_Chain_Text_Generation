@@ -5,5 +5,8 @@
 /Atlas.txt
 /dist/
 /build/
-/dist/
 /Markov_Text_Generator_cmdLine.spec
+/Markov_Text_Generator_CLI.dist/
+/Markov_Text_Generator_CLI.build/
+/MinGW/
+/.idea/

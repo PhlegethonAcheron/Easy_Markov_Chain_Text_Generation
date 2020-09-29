@@ -106,7 +106,7 @@ def get_start_word(text):
     return first_word
 
 
-def main_bit_automatic():
+def main():
     text_file = get_text_file()
     text = open(text_file).read()
     word_dict = get_dict(text_file)
@@ -139,7 +139,8 @@ def main_bit_automatic():
         print("Invalid option.")
 
     if input("Would you like to run the program again? (Y/N)\n:>\t").upper() == 'Y':
-        main_bit_automatic()
+        main()
 
 
-main_bit_automatic()
+if __name__ == "__main__":
+    main()
