@@ -4,6 +4,7 @@
 
 ## Getting Started
 Download the release and place it in an empty folder. If you chose the .zip, extract it into the empty folder. Double-click the `Markov_Text_Generator_CLI.exe` or `Markov_Text_Generator_CLI.PythonPackaged.v0.3.exe` to start.
+[***Downloads can be found here.***](https://github.com/PhlegethonAcheron/Easy_Markov_Chain_Text_Generation/releases/tag/v0.3-alpha)
 
 ## Using the CLI
 
