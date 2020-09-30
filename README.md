@@ -17,3 +17,6 @@ Since the program simulates keypresses, caution is recommended to ensure that no
 ## Stopping the Program
 To stop the program at any point while it is entering characters, simply move the mouse swiftly to the top left corner of the screen. Note that this only works if Option 3 has been selected to output text.
 To stop the program at any point, enter <kbd>Ctrl</kbd> + <kbd>C</kbd>. This hotkey will work at any point in the program's operation.
+
+## Currently-Known Bugs:
+The .zip release crashes when it tries to write over 100 lines to a text file, but the standalone .exe release doesn't.
