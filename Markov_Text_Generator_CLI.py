@@ -37,8 +37,11 @@ def train_model(text):
     return word_dict
 
 
-def generate_text(first_word, word_dict):
-    chain = [first_word]
+def generate_text(first_word, word_dict, text):
+    if first_word == 'NullNull':
+        chain = [np.random.choice(text.split())]
+    else:
+        chain = [first_word]
 
     while True:
         curr_word = np.random.choice(word_dict[chain[-1]])
@@ -99,8 +102,11 @@ def get_num_sentences():
 
 
 def get_start_word(text):
-    first_word = ' ' + input("What is the initial word?\n:>\t") + ' '
+    first_word = ' ' + input(
+        "What is the initial word? Entering nothing will result in a random word for each sentence.\n:>\t") + ' '
 
+    if first_word == '  ':
+        return 'NullNull'
     if first_word.upper() in text.upper():
         print('Using chosen word.')
         first_word = first_word.strip()
@@ -126,20 +132,20 @@ def main():
     if 1 == int(user_option):
         output_file = open('output_' + text_file, 'a')
         for i in range(num_sentences):
-            output_file.write(cleanup(generate_text(first_word, word_dict)) + '\n')
+            output_file.write(cleanup(generate_text(first_word, word_dict, text)) + '\n')
         output_file.close()
         input("Done!")
 
     elif 2 == int(user_option):
         for i in range(num_sentences):
-            print(cleanup(generate_text(first_word, word_dict)))
+            print(cleanup(generate_text(first_word, word_dict, text)))
         input("Done!")
 
     elif 3 == int(user_option):
         print("You have 2 seconds to move the cursor to the desired location.")
         time.sleep(2)
         for i in range(num_sentences):
-            output = cleanup(generate_text(first_word, word_dict))
+            output = cleanup(generate_text(first_word, word_dict, text))
             pyautogui.typewrite(output, interval=0.01)
             pyautogui.press('enter')
             time.sleep(0.5)
