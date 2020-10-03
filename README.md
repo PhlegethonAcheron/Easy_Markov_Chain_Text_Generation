@@ -19,4 +19,4 @@ To stop the program at any point while it is entering characters, simply move th
 To stop the program at any point, enter <kbd>Ctrl</kbd> + <kbd>C</kbd>. This hotkey will work at any point in the program's operation.
 
 ## Currently-Known Bugs:
-The .zip release crashes when it tries to write over 100 lines to a text file, but the standalone .exe release doesn't.
+There are stability problems, and RAM usage graphs while the program is running look like a saw wave. RAM will likely be the limiting factor while the program is running.

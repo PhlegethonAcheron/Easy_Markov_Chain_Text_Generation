@@ -9,6 +9,7 @@ import pyautogui
 
 
 # TODO: Make this a class with constructor.
+# TODO: Make the program only open the dictionary once.
 # TODO: Add the Dictionary location as an optional argument
 # TODO: Make the first_word an optional argument
 # TODO: Remove main() from this class
