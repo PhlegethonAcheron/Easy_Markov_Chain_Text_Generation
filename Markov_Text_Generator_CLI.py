@@ -21,7 +21,6 @@ def make_pairs(text):
     for i in range(len(text) - 1):
         yield text[i], text[i + 1]
 
-
 def make_dict(pairs):
     word_dict = {}
     for word_1, word_2 in pairs:
@@ -31,12 +30,10 @@ def make_dict(pairs):
             word_dict[word_1] = [word_2]
     return word_dict
 
-
-def train_model(text):
+def make_model(text):
     pairs = make_pairs(text)
     word_dict = make_dict(pairs)
     return word_dict
-
 
 def generate_text(first_word, word_dict, text):
     if first_word == 'NullNull':
@@ -49,6 +46,23 @@ def generate_text(first_word, word_dict, text):
         chain.append(curr_word)
         if any(x in curr_word for x in ('!', '?', '.')) and not any(x in curr_word for x in ('Mr.', 'Ms.', 'Mrs.')):
             return chain
+
+
+def generate_sentences(first_word, word_dict, text, num_sentences):
+    sentences = []
+    for i in range(num_sentences):
+        if first_word == 'NullNull':
+            chain = [np.random.choice(text.split())]
+        else:
+            chain = [first_word]
+
+        while True:
+            curr_word = np.random.choice(word_dict[chain[-1]])
+            chain.append(curr_word)
+            if any(x in curr_word for x in ('!', '?', '.')) and not any(x in curr_word for x in ('Mr.', 'Ms.', 'Mrs.')):
+                sentences.append(chain)
+                break
+    return sentences
 
 
 def remove_duplicates(lst):
@@ -69,6 +83,14 @@ def cleanup(text):
     return text
 
 
+def cleanup_sentences(sentences):
+    dirty_sentences = sentences
+    clean_sentences = []
+    for i in dirty_sentences:
+        clean_sentences.append(cleanup(i))
+    return clean_sentences
+
+
 def get_dict(text_file, dict_path):
     json_file_name = 'dict_' + os.path.splitext(text_file)[0] + '.json'
     json_file_path = dict_path + json_file_name
@@ -78,11 +100,10 @@ def get_dict(text_file, dict_path):
         with open(json_file_path) as json_file_path:
             word_dict = json.load(json_file_path)
     else:
-        word_dict = train_model(open(text_file).read())
+        word_dict = make_model(open(text_file).read())
         with open(json_file_path, 'w') as outfile:
             json.dump(word_dict, outfile)
     return word_dict
-
 
 def get_text_file():
     file_path = input("Source Data File?\n:>\t")
@@ -102,6 +123,29 @@ def get_num_sentences():
         get_num_sentences()
 
 
+def get_start_words(text, num_words):
+    first_word_raw = input(
+        "What is the initial word? Entering nothing will result in a random word for each sentence.\n:>\t")
+    first_word = ' ' + first_word_raw + ' '
+    word_list = []
+
+    if first_word_raw == '':
+        for i in range(num_words):
+            word_list.append(np.random.choice(text.split()))
+
+    if first_word.upper() in text.upper():
+        print('Using chosen word.')
+        for i in range(num_words):
+            word_list.append(first_word_raw)
+    else:
+        if input("Chosen word not found. Chose random words (Y) or select a new word (N) (Y/N)\n:>\t").upper() == 'N':
+            get_start_word(text)
+        else:
+            for i in range(num_words):
+                word_list.append(np.random.choice(text.split()))
+    return word_list
+
+
 def get_start_word(text):
     first_word = ' ' + input(
         "What is the initial word? Entering nothing will result in a random word for each sentence.\n:>\t") + ' '
@@ -117,7 +161,6 @@ def get_start_word(text):
         else:
             first_word = np.random.choice(text.split())
     return first_word
-
 
 def main():
     dict_path = os.getenv('APPDATA') + '\\Markov_Dictionaries\\'
@@ -139,7 +182,9 @@ def main():
 
     elif 2 == int(user_option):
         for i in range(num_sentences):
-            print(cleanup(generate_text(first_word, word_dict, text)))
+            for j in cleanup_sentences(generate_sentences(first_word, word_dict, text, num_sentences)):
+                print(j)
+            # print(cleanup(generate_text(first_word, word_dict, text)))
         input("Done!")
 
     elif 3 == int(user_option):
@@ -151,6 +196,11 @@ def main():
             pyautogui.press('enter')
             time.sleep(0.5)
         input("Done!")
+
+    elif 4 == int(user_option):
+        for i in cleanup_sentences(generate_sentences(first_word, word_dict, text, num_sentences)):
+            print(i + "\n")
+
     else:
         print("Invalid option.")
 
